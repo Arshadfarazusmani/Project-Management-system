@@ -32,4 +32,10 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 
+// Routes import 
+
+import healthckecRoutes from "./routes/healthchek.routes.js"
+
+app.use("/api/v1/healthcheck",healthckecRoutes)
+
 export {app}
