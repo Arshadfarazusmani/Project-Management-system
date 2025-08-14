@@ -16,3 +16,5 @@ export const Task_Status_Enums = {
 
 export const availablt_Task_status_values= Object.values(Task_Status_Enums)
 
+
+export const db_name = "Project_management_system_db"

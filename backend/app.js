@@ -1,5 +1,5 @@
 import express from "express";
-import cookieParser from "cookieparser";
+import cookieParser from "cookie-parser";
 import cors from "cors"
 
 const app = express() // creating express application -> object which have multiple functionality
