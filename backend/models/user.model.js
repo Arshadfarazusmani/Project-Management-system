@@ -1,4 +1,6 @@
 import mongoose, { Schema }  from "mongoose"; 
+import jwt from "jsonwebtoken"
+import crypto from "crypto"
 
 const UserSchema= new Schema({
     avatar:{
@@ -85,8 +87,65 @@ UserSchema.methods.comparePassword = async function(password){
            };
 
 
+// Generating Accesss Token 
 
+UserSchema.methods.generateAccessToken = function(){
+    return jwt.sign(
+        {
+            _id:this._id,
+            email:this.email,
+            username:this.username
 
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            "expiresIn":process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+// Generating Accesss Token 
+
+UserSchema.methods.generateAccessToken = function(){
+    return jwt.sign(
+        {
+            _id:this._id,
+            email:this.email,
+            username:this.username
+
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            "expiresIn":process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+// Generating Refresh  Token 
+
+UserSchema.methods.generateRefreshToken = function(){
+    return jwt.sign(
+        {
+            _id:this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            "expiresIn":process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+
+// genating temporary tokens 
+
+UserSchema.methods.genarateTemporaryTokens= function () {
+
+    const unhashedToken= crypto.randomBytes(20).toString("hex")
+
+    const HashedToken = crypto.createHash("sha256").update(unhashedToken).digest("hex")
+
+    const TokenExpiry= Date.now() + (20*60*1000)
+
+    return {unhashedToken,HashedToken,TokenExpiry}
+    
+}
 
 
 
