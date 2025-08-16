@@ -1,17 +1,12 @@
 import mongoose, { Schema }  from "mongoose"; 
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
+import bcrypt from "bcrypt"
 
 const UserSchema= new Schema({
-    avatar:{
-        type:{
-            url:String,
-            localpath : String
-        },
-        default:{
-            url:`https://placehold.co/200x200`,
-            localpath: ""
-        }
+    avatar: {
+      type: String, // <--- Change this to String
+      default: "https://default-avatar.com/image.png", // Optional: A default avatar if none is uploaded
     },
 
     username:{

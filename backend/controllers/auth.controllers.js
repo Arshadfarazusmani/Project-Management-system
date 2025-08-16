@@ -1,6 +1,8 @@
 import { User } from "../models/user.model.js";
 import { api_error } from "../utils/api_error.js";
+import { api_response } from "../utils/api_response.js";
 import { async_handler } from "../utils/async_handler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { emailverificationmailgencontent, sendmail } from "../utils/mail.js";
 
 const generateAccessTokenandRefreshToken = async(user_id)=>{
@@ -56,13 +58,16 @@ const RegisterUser=async_handler(async(req , res )=>{
 //    check for avatar 
 
 const avatarlocalpath =  req.files?.avatar[0]?.path;  
+console.log(avatarlocalpath);
+
 
 let avatar ;
 
 
+
 if(avatarlocalpath){
 
-    avatar= await upploadOncluodinary(avatarlocalpath);
+    avatar= await uploadOnCloudinary(avatarlocalpath);
     
 }
 
@@ -84,14 +89,14 @@ const user=await User.create({  // this will create a new object in db
 
  user.save({validateBeforeSave:false})
 
- await sendmail({
-    email:user?.email,
-    subject: "Please verify your Email !!",
-    mailgencontent:emailverificationmailgencontent(
-        user?.username,
-         `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unhashedToken}`
-    )
- })
+//  await sendmail({
+//     email:user?.email,
+//     subject: "Please verify your Email !!",
+//     mailgencontent:emailverificationmailgencontent(
+//         user?.username,
+//          `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unhashedToken}`
+//     )
+//  })
 
  const createdUser= await User.findById(user._id).select("-password  -refreshToken -emailVarificationToken -emailVarificationTokenExpiry")
 
@@ -101,6 +106,8 @@ const user=await User.create({  // this will create a new object in db
  }
 
  res.status(201).json(new api_response(200,"User created successfully",createdUser));
+ console.log("User created ");
+ 
 })
 
 
